@@ -45,6 +45,7 @@ public class KeelsScraper {
 
             WebDriver webDriver = new ChromeDriver(options);
             webDriver.get(url);
+            webDriver.get(url);
 
             WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
