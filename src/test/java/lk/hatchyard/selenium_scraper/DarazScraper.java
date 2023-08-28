@@ -1,5 +1,11 @@
 package lk.hatchyard.selenium_scraper;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,7 +14,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class DarazScraper {
@@ -51,8 +62,11 @@ public class DarazScraper {
             System.out.println(productDocument.select("div.tag-name").text());
 
             Elements productDetails = productDocument.select("li.key-li");
+            String productId = "";
             for(Element element : productDetails){
-                System.out.println(element.select("div.html-content.key-value").text());
+                String SKU = element.select("div.html-content.key-value").text();
+                productId = SKU.split("_")[0];
+                System.out.println("SKU :" + SKU);
             }
 
 
@@ -68,12 +82,9 @@ public class DarazScraper {
 
             System.out.println(productDocument.select("div.html-content.detail-content").text());
 
-            Elements reviews = productDocument.select("div#module_product_review.pdp-block.module").select("div.lazyload-wrapper ");
-            Set<String> comments = new HashSet<>();
-            for(Element commentElement : reviews) {
-                comments.add("comment :" + commentElement.select("div.content").text());
-            }
-            comments.forEach(System.out::println);
+
+
+            callAPI(productId);
 
             break;
         }
@@ -104,6 +115,55 @@ public class DarazScraper {
 
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    private static void  callAPI ( String productID){
+        OkHttpClient client = new OkHttpClient();
+
+//        String url = "https://my.daraz.lk/pdp/review/getReviewList?itemId=102444728&pageSize=5&filter=0&sort=0";
+        String pageSize = "pageSize=5";
+        String itemId = "itemId="+productID;
+        String filter = "filter=0&sort=0";
+        StringBuilder url = new StringBuilder("https://my.daraz.lk/pdp/review/getReviewList?");
+        url.append(itemId);
+        url.append("&"+pageSize);
+        url.append("&"+filter);
+//        System.out.println(url);
+
+        Request request = new Request.Builder()
+                .url(String.valueOf(url))
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                ResponseBody responseBody = response.body();
+                if (responseBody != null) {
+                    String jsonStr = responseBody.string();
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+
+                    // Now you can work with the jsonObject as needed
+                    JSONObject model = jsonObject.getJSONObject("model");
+                    JSONArray jsonArray = model.getJSONArray("items");
+//                    JSONArray jsonArray = new JSONArray(items);
+
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        JSONObject rate = jsonArray.getJSONObject(i);
+                        String reviewContent = rate.getString("reviewContent");
+                        String rating = rate.getString("rating");
+
+                        System.out.println("Review Content: " + reviewContent + "  Rating: " + rating);
+                    }
+
+//                    System.out.println(jsonObject.toString(4)); // Print with indentation
+                } else {
+                    System.out.println("Empty response body.");
+                }
+            } else {
+                System.out.println("API request failed with response code: " + response.code());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
