@@ -22,15 +22,15 @@ public class SparScrapper {
         for(Element divElement : elements) {
             count++;
 
-            if(count == 1)
+            if (count == 0)
                 continue;
 
             String productName = divElement.select("a.product-item__title.text--strong.link").text();
             System.out.println("Product name : " + productName);
 
             Elements link = divElement.select("a[href]");
-            String productLink =  link.attr("href");
-            productLink = "https://www.spar.lk"+productLink;
+            String productLink = link.attr("href");
+            productLink = "https://www.spar.lk" + productLink;
             System.out.println("Product link : " + productLink);
 
             String productPrice = divElement.select("span.price.price--highlight").text();
@@ -43,14 +43,27 @@ public class SparScrapper {
 
             Elements discountLabel = productDocument.select("div.product-meta__label-list");
 
-            System.out.println("Discount : " + discountLabel.
-                    select("span.product-label.product-label--on-sale").select("span.money").text());
+            Element first = discountLabel.select("span.product-label.product-label--on-sale").first();
 
-            Elements priceLabel = productDocument.select("div.card__section").select("div.price-list");
+            String style = first.attr("style");
 
-            System.out.println("Sale price: " + priceLabel.select("span.price.price--highlight").select("span.money").text());
+//            String styleValue = style.split(":")[1];
 
-            System.out.println("Regular price: " + priceLabel.select("span.price.price--compare").select("span.money").text());
+            if (style.equals("")) {
+                System.out.println("Discount : " + discountLabel.
+                        select("span.product-label.product-label--on-sale").select("span.money").text());
+
+                Elements priceLabel = productDocument.select("div.card__section").select("div.price-list");
+
+                System.out.println("Sale price: " + priceLabel.select("span.price.price--highlight").select("span.money").text());
+
+                System.out.println("Regular price: " + priceLabel.select("span.price.price--compare").select("span.money").text());
+            }
+            else {
+                Elements priceLabel = productDocument.select("div.card__section").select("div.price-list");
+
+                System.out.println("Sale price: " + priceLabel.select("span.price").select("span.money").text());
+            }
 
             Elements heroImageElement = productDocument.select("div.product-gallery__carousel.product-gallery__carousel--zoomable").select("img[src]");
 
