@@ -1,0 +1,26 @@
+{
+  "diningMode":"DELIVERY",
+  "sectionUUIDs":null,
+  "storeUUIDs":[
+    "4f15f834-7050-4adc-8a5c-dbaef8e1f000"
+  ],
+  "userQuery":"sunlight",
+  "isGrocery":true,
+  "targetLocation":{
+    "address":"38, Iswari Road, Colombo 5,  Sri Lanka, , ",
+    "streetAddress":"38",
+    "city":"",
+    "country":"LK",
+    "postalCode":"",
+    "region":"",
+    "latitude":6.8787183,
+    "longitude":79.8708461,
+    "geo":{
+      "city":"colombo-western",
+      "country":"lk",
+      "region":"western"
+    },
+    "locationType":"GROCERY_STORE"
+  },
+  "preferredCatalogSectionType":"HORIZONTAL_GRID"
+}

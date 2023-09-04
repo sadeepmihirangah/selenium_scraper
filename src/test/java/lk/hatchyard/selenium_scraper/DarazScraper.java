@@ -39,7 +39,7 @@ public class DarazScraper {
         for(Element divElement : elements) {
             count++;
 
-            if(count == 1)
+            if(count == 2)
                 continue;
 
             String productName = divElement.select("div.title--wFj93").text();
@@ -65,7 +65,10 @@ public class DarazScraper {
             String productId = "";
             for(Element element : productDetails){
                 String SKU = element.select("div.html-content.key-value").text();
-                productId = SKU.split("_")[0];
+                String key = element.select("span.key-title").text();
+                if (key.equals("SKU")) {
+                    productId = SKU.split("_")[0];
+                }
                 System.out.println("SKU :" + SKU);
             }
 

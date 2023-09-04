@@ -1,0 +1,26 @@
+{
+  "diningMode": "DELIVERY",
+  "sectionUUIDs": null,
+  "storeUUIDs": [
+    "e05900ad-c017-4ab9-a88d-14c7f3892020"
+  ],
+  "userQuery": "sunlight%0A",
+  "isGrocery": true,
+  "targetLocation": {
+    "address": "1111 Maradana Rd, Colombo 008",
+    "streetAddress": "1111 Maradana Rd",
+    "city": "Colombo",
+    "country": "LK",
+    "postalCode": "08",
+    "region": "",
+    "latitude": 6.9165989,
+    "longitude": 79.8758617,
+    "geo": {
+      "city": "colombo-western",
+      "country": "lk",
+      "region": "western"
+    },
+    "locationType": "GROCERY_STORE"
+  },
+  "preferredCatalogSectionType": "HORIZONTAL_GRID"
+}
